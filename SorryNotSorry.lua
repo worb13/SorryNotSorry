@@ -131,6 +131,47 @@ local function OnChatEvent(control, ...)
     end
 end
 
+local function slashCmdMainHandler(arg)
+    CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
+
+   -- the following can be a switch, just couldnt be bothered to figure out how lol
+    if(arg == "on") then
+        isFilterGlobal = true
+        isFilterFriend = true
+        isFilterGuildie = true
+
+        CHAT_SYSTEM:AddMessage("On")
+    elseif(arg == "off") then
+        isFilterGlobal = false
+        isFilterFriend = false
+        isFilterGuildie = false
+
+        CHAT_SYSTEM:AddMessage("Off")
+    elseif(arg == "friendsonly") then
+        isFilterGlobal = false
+        isFilterFriend = true
+        isFilterGuildie = false
+
+        CHAT_SYSTEM:AddMessage("Friends Only")
+    elseif(arg == "guildiesonly") then
+        isFilterGlobal = false
+        isFilterFriend = false
+        isFilterGuildie = true
+
+        CHAT_SYSTEM:AddMessage("Guildies Only")
+    else
+        isFilterGlobal = not isFilterGlobal
+        isFilterFriend = isFilterGlobal
+        isFilterGuildie = isFilterGlobal
+
+        if(isFilterGlobal) then
+            CHAT_SYSTEM:AddMessage("On")
+        else
+            CHAT_SYSTEM:AddMessage("Off")
+        end
+    end
+end
+
 function SorryNotSorry:Initialize()
     -- store original OnChatEvent fn and overwrite the event handler with our own
     self.OnChatEventOrg = CHAT_SYSTEM.OnChatEvent
@@ -139,46 +180,7 @@ function SorryNotSorry:Initialize()
     InitLookupFriends()
     InitLookupGuilds()
 
-    SLASH_COMMANDS["/sorrynotsorry"] = function(arg)
-        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
-
-       -- the following can be a switch, just couldnt be bothered to figure out how lol
-        if(arg == "on") then
-            isFilterGlobal = true
-            isFilterFriend = true
-            isFilterGuildie = true
-
-            CHAT_SYSTEM:AddMessage("On")
-        elseif(arg == "off") then
-            isFilterGlobal = false
-            isFilterFriend = false
-            isFilterGuildie = false
-
-            CHAT_SYSTEM:AddMessage("Off")
-        elseif(arg == "friendsonly") then
-            isFilterGlobal = false
-            isFilterFriend = true
-            isFilterGuildie = false
-
-            CHAT_SYSTEM:AddMessage("Friends Only")
-        elseif(arg == "guildiesonly") then
-            isFilterGlobal = false
-            isFilterFriend = false
-            isFilterGuildie = true
-
-            CHAT_SYSTEM:AddMessage("Guildies Only")
-        else
-            isFilterGlobal = not isFilterGlobal
-            isFilterFriend = isFilterGlobal
-            isFilterGuildie = isFilterGlobal
-
-            if(isFilterGlobal) then
-                CHAT_SYSTEM:AddMessage("On")
-            else
-                CHAT_SYSTEM:AddMessage("Off")
-            end
-        end
-    end
+    SLASH_COMMANDS["/sorrynotsorry"] = slashCmdHandler
 
     -- Dummy commands so that autocomplete destects permitted args
     SLASH_COMMANDS["/sorrynotsorry on"] = function()
