@@ -181,6 +181,7 @@ function SorryNotSorry:Initialize()
     InitLookupGuilds()
 
     SLASH_COMMANDS["/sorrynotsorry"] = slashCmdHandler
+    SLASH_COMMANDS["/sns"] = slashCmdHandler
 
     -- Dummy commands so that autocomplete destects permitted args
     SLASH_COMMANDS["/sorrynotsorry on"] = function()
