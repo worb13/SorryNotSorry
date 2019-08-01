@@ -182,16 +182,6 @@ function SorryNotSorry:Initialize()
 
     SLASH_COMMANDS["/sorrynotsorry"] = slashCmdHandler
     SLASH_COMMANDS["/sns"] = slashCmdHandler
-
-    -- Dummy commands so that autocomplete destects permitted args
-    SLASH_COMMANDS["/sorrynotsorry on"] = function()
-    end
-    SLASH_COMMANDS["/sorrynotsorry off"] = function()
-    end
-    SLASH_COMMANDS["/sorrynotsorry friendsonly"] = function()
-    end
-    SLASH_COMMANDS["/sorrynotsorry guildiesonly"] = function()
-    end
 end
 
 local function SorryNotSorryAddonLoaded(eventType, addonName)
