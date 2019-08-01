@@ -159,6 +159,14 @@ local function slashCmdMainHandler(arg)
         isFilterGuildie = true
 
         CHAT_SYSTEM:AddMessage("Guildies Only")
+    elseif(arg == "msgnote") then
+        isBlockedMsgNote = not isBlockedMsgNote
+
+        if(isBlockedMsgNote) then
+            CHAT_SYSTEM:AddMessage("Blocked Message Note On")
+        else
+            CHAT_SYSTEM:AddMessage("Blocked Message Note Off")
+        end
     else
         isFilterGlobal = not isFilterGlobal
         isFilterFriend = isFilterGlobal
