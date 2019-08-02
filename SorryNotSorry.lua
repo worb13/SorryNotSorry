@@ -11,10 +11,15 @@ local whitelist = {
     }
 }
 
-local isFilterGlobal = false
-local isFilterFriend = false
-local isFilterGuildie = false
-local isBlockedMsgNote = true
+local SavedVars = {}
+local defaultSavedVars = {
+    settings={
+        isFilterGlobal=false,
+        isFilterFriend=false,
+        isFilterGuildie=false,
+        isBlockedMsgNote=true
+    }
+}
 
 -- data structure
 -- {
@@ -116,14 +121,14 @@ local function OnChatEvent(control, ...)
     if(messageSource == 131103 and messageType == 2) then
         -- CHAT_SYSTEM:AddMessage("PM")
         -- CHAT_SYSTEM:AddMessage(messageSender)
-        local friendBool = not isFilterFriend or isFriend(messageSender)
-        local guildieBool = not isFilterGuildie or isGuildie(messageSender)
+        local friendBool = not SavedVars["settings"]["isFilterFriend"] or isFriend(messageSender)
+        local guildieBool = not SavedVars["settings"]["isFilterGuildie"] or isGuildie(messageSender)
 
         if(friendBool and guildieBool) then
             SorryNotSorry.OnChatEventOrg(control, ...)
 
         -- else do not call original chat event fn (and therefore message blocked)
-        elseif(isBlockedMsgNote) then
+        elseif(SavedVars["settings"]["isBlockedMsgNote"]) then
             CHAT_SYSTEM:AddMessage("Private Message Blocked!")
         end
     else
@@ -146,49 +151,49 @@ local function slashCmdMainHandler(arg)
     if(arg == "help") then
         printHelpMessage()
     elseif(arg == "on") then
-        isFilterGlobal = true
-        isFilterFriend = true
-        isFilterGuildie = true
+        SavedVars["settings"]["isFilterGlobal"] = true
+        SavedVars["settings"]["isFilterFriend"] = true
+        SavedVars["settings"]["isFilterGuildie"] = true
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("On")
     elseif(arg == "off") then
-        isFilterGlobal = false
-        isFilterFriend = false
-        isFilterGuildie = false
+        SavedVars["settings"]["isFilterGlobal"] = false
+        SavedVars["settings"]["isFilterFriend"] = false
+        SavedVars["settings"]["isFilterGuildie"] = false
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Off")
     elseif(arg == "friendsonly") then
-        isFilterGlobal = false
-        isFilterFriend = true
-        isFilterGuildie = false
+        SavedVars["settings"]["isFilterGlobal"] = false
+        SavedVars["settings"]["isFilterFriend"] = true
+        SavedVars["settings"]["isFilterGuildie"] = false
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Friends Only")
     elseif(arg == "guildiesonly") then
-        isFilterGlobal = false
-        isFilterFriend = false
-        isFilterGuildie = true
+        SavedVars["settings"]["isFilterGlobal"] = false
+        SavedVars["settings"]["isFilterFriend"] = false
+        SavedVars["settings"]["isFilterGuildie"] = true
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Guildies Only")
     elseif(arg == "msgnote") then
-        isBlockedMsgNote = not isBlockedMsgNote
+        SavedVars["settings"]["isBlockedMsgNote"] = not SavedVars["settings"]["isBlockedMsgNote"]
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
-        if(isBlockedMsgNote) then
+        if(SavedVars["settings"]["isBlockedMsgNote"]) then
             CHAT_SYSTEM:AddMessage("Blocked Message Note On")
         else
             CHAT_SYSTEM:AddMessage("Blocked Message Note Off")
         end
     else
-        isFilterGlobal = not isFilterGlobal
-        isFilterFriend = isFilterGlobal
-        isFilterGuildie = isFilterGlobal
+        SavedVars["settings"]["isFilterGlobal"] = not SavedVars["settings"]["isFilterGlobal"]
+        SavedVars["settings"]["isFilterFriend"] = SavedVars["settings"]["isFilterGlobal"]
+        SavedVars["settings"]["isFilterGuildie"] = SavedVars["settings"]["isFilterGlobal"]
 
         CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
-        if(isFilterGlobal) then
+        if(SavedVars["settings"]["isFilterGlobal"]) then
             CHAT_SYSTEM:AddMessage("On")
         else
             CHAT_SYSTEM:AddMessage("Off")
@@ -197,12 +202,15 @@ local function slashCmdMainHandler(arg)
 end
 
 function SorryNotSorry:Initialize()
+    SavedVars = ZO_SavedVars:NewAccountWide("SorryNotSorry_Data", 1, nil, defaultSavedVars)
+
     -- store original OnChatEvent fn and overwrite the event handler with our own
     self.OnChatEventOrg = CHAT_SYSTEM.OnChatEvent
     CHAT_SYSTEM.OnChatEvent = OnChatEvent
 
     InitLookupFriends()
     InitLookupGuilds()
+    -- whitelist["friends"]["id"]["@Tailger"] = 0
 
     SLASH_COMMANDS["/sorrynotsorry"] = printHelpMessage
     SLASH_COMMANDS["/sns"] = slashCmdMainHandler
