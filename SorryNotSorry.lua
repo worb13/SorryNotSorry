@@ -141,9 +141,9 @@ local function printHelpMessage()
     CHAT_SYSTEM:AddMessage("/sns --- toggles friend and guild PM whitelist on and off")
     CHAT_SYSTEM:AddMessage("/sns on --- turns on both friend and guild PM whitelist")
     CHAT_SYSTEM:AddMessage("/sns off --- turns off both friend and guild PM whitelist")
-    CHAT_SYSTEM:AddMessage("/sns off --- turns off both friend and guild PM whitelist")
     CHAT_SYSTEM:AddMessage("/sns friendsonly --- turns on friend PM whitelist")
     CHAT_SYSTEM:AddMessage("/sns guildiesonly --- turns on guildie PM whitelist")
+    CHAT_SYSTEM:AddMessage("/sns msgnote --- toggles blocked msg on and off")
 end
 
 local function slashCmdMainHandler(arg)
