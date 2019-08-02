@@ -131,9 +131,21 @@ local function OnChatEvent(control, ...)
     end
 end
 
+local function printHelpMessage()
+    CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking --- Available Commands:")
+    CHAT_SYSTEM:AddMessage("/sns --- toggles friend and guild PM whitelist on and off")
+    CHAT_SYSTEM:AddMessage("/sns on --- turns on both friend and guild PM whitelist")
+    CHAT_SYSTEM:AddMessage("/sns off --- turns off both friend and guild PM whitelist")
+    CHAT_SYSTEM:AddMessage("/sns off --- turns off both friend and guild PM whitelist")
+    CHAT_SYSTEM:AddMessage("/sns friendsonly --- turns on friend PM whitelist")
+    CHAT_SYSTEM:AddMessage("/sns guildiesonly --- turns on guildie PM whitelist")
+end
+
 local function slashCmdMainHandler(arg)
    -- the following can be a switch, just couldnt be bothered to figure out how lol
-    if(arg == "on") then
+    if(arg == "help") then
+        printHelpMessage()
+    elseif(arg == "on") then
         isFilterGlobal = true
         isFilterFriend = true
         isFilterGuildie = true
@@ -191,7 +203,7 @@ function SorryNotSorry:Initialize()
     InitLookupFriends()
     InitLookupGuilds()
 
-    SLASH_COMMANDS["/sorrynotsorry"] = slashCmdHandler
+    SLASH_COMMANDS["/sorrynotsorry"] = printHelpMessage
     SLASH_COMMANDS["/sns"] = slashCmdHandler
 end
 
