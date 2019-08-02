@@ -132,20 +132,20 @@ local function OnChatEvent(control, ...)
 end
 
 local function slashCmdMainHandler(arg)
-    CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
-
    -- the following can be a switch, just couldnt be bothered to figure out how lol
     if(arg == "on") then
         isFilterGlobal = true
         isFilterFriend = true
         isFilterGuildie = true
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("On")
     elseif(arg == "off") then
         isFilterGlobal = false
         isFilterFriend = false
         isFilterGuildie = false
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Off")
     elseif(arg == "friendsonly") then
         isFilterGlobal = false
@@ -158,10 +158,12 @@ local function slashCmdMainHandler(arg)
         isFilterFriend = false
         isFilterGuildie = true
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Guildies Only")
     elseif(arg == "msgnote") then
         isBlockedMsgNote = not isBlockedMsgNote
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         if(isBlockedMsgNote) then
             CHAT_SYSTEM:AddMessage("Blocked Message Note On")
         else
@@ -172,6 +174,7 @@ local function slashCmdMainHandler(arg)
         isFilterFriend = isFilterGlobal
         isFilterGuildie = isFilterGlobal
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         if(isFilterGlobal) then
             CHAT_SYSTEM:AddMessage("On")
         else
