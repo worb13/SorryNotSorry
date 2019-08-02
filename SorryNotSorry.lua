@@ -51,6 +51,8 @@ end
 
 -- Function to set up the friends list in the whitelist
 local function InitLookupFriends()
+    whitelist["friends"]["id"] = {}
+    whitelist["friends"]["char"] = {}
     for i=1, GetNumFriends() do
         local IdName = GetFriendInfo(i)
         local hasChar, CharName = GetFriendCharacterInfo(i);
@@ -63,6 +65,8 @@ end
 -- src: https://www.esoui.com/forums/showthread.php?t=2298
 -- thank you OP!
 local function InitLookupGuilds()
+    whitelist["guilds"]["id"] = {}
+    whitelist["guilds"]["char"] = {}
     for guild = 1, GetNumGuilds() do
         -- Guildname
         local guildId = GetGuildId(guild)
@@ -119,12 +123,11 @@ local function OnChatEvent(control, ...)
 
     -- if whisper / private msg / direct msg / etc.
     if(messageSource == 131103 and messageType == 2) then
-        -- CHAT_SYSTEM:AddMessage("PM")
-        -- CHAT_SYSTEM:AddMessage(messageSender)
-        local friendBool = not SavedVars["settings"]["isFilterFriend"] or isFriend(messageSender)
-        local guildieBool = not SavedVars["settings"]["isFilterGuildie"] or isGuildie(messageSender)
-
-        if(friendBool and guildieBool) then
+        if(
+            (not SavedVars["settings"]["isFilterFriend"]) and (not SavedVars["settings"]["isFilterGuildie"])
+                or (SavedVars["settings"]["isFilterFriend"] and isFriend(messageSender))
+                or (SavedVars["settings"]["isFilterGuildie"] and isGuildie(messageSender))
+        ) then
             SorryNotSorry.OnChatEventOrg(control, ...)
 
         -- else do not call original chat event fn (and therefore message blocked)
@@ -210,7 +213,6 @@ function SorryNotSorry:Initialize()
 
     InitLookupFriends()
     InitLookupGuilds()
-    -- whitelist["friends"]["id"]["@Tailger"] = 0
 
     SLASH_COMMANDS["/sorrynotsorry"] = printHelpMessage
     SLASH_COMMANDS["/sns"] = slashCmdMainHandler
