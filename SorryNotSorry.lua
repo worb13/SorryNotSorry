@@ -164,6 +164,7 @@ local function slashCmdMainHandler(arg)
         isFilterFriend = true
         isFilterGuildie = false
 
+        CHAT_SYSTEM:AddMessage("Unknown Private Message Blocking:")
         CHAT_SYSTEM:AddMessage("Friends Only")
     elseif(arg == "guildiesonly") then
         isFilterGlobal = false
@@ -204,7 +205,7 @@ function SorryNotSorry:Initialize()
     InitLookupGuilds()
 
     SLASH_COMMANDS["/sorrynotsorry"] = printHelpMessage
-    SLASH_COMMANDS["/sns"] = slashCmdHandler
+    SLASH_COMMANDS["/sns"] = slashCmdMainHandler
 end
 
 local function SorryNotSorryAddonLoaded(eventType, addonName)
