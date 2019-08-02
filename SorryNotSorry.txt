@@ -1,5 +1,5 @@
 ## Title: Sorry, Not Sorry!
-## APIVersion: 100024 100025
+## APIVersion: 100027
 ## Author: worb13, Naranarra
 ## Description: Block private messages from people you don't know!
 ## Version: 0.1.0
